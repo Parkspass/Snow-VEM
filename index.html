@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>Zion VEM</title>
+    <!-- Links -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <!-- iOS PWA Support -->
+    <meta name="theme-color" content="#FF6633"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Zion VEM">
+    <meta name="apple-mobile-web-app-status-bar" content="black">
+    <link rel="apple-touch-icon" href="pwa_icons/apple-touch-icon.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/pwaIcons/icon_828x1792.png"/>
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/pwaIcons/icon_1242x2688.png"/>
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/pwaIcons/icon_1125x2436.png"/>
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="/pwaIcons/icon_1242x2208.png"/>
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/pwaIcons/icon_750x1334.png"/>
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/pwaIcons/icon_2048x2732.png"/>
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/pwaIcons/icon_1668x2224.png"/>
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/pwaIcons/icon_640x1136.png"/>
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/pwaIcons/icon_1668x2388.png"/>
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="/pwaIcons/icon_1536x2048.png"/>
+</head>
+<body>
+    <div id="app">
+        <div class="appBar" v-if="page!='weatherSelect' && page!='trailSelect'"> <!-- App bar for login page -->
+            <div class="title">
+                <img class="bison" src="icons/bison orange.svg">
+                <div class="titleContainer">
+                    <h1 class="titleText">Zion VEM</h1>
+                    <p class="date">{{currentDate}}</p>
+                </div>
+                <img class="hamburger" src="icons/hamburger.svg" @click="hamburgerClicked">
+            </div>
+        </div>
+        <div class="overlayHamburger" v-if="hamburger_selected">
+            <div class="hamburgerWrap">
+                <h4 class="overlayTitle menuTitle">Menu <img class="x xBar" src="icons/x.svg" @click="hamburger_selected=false"></h4>
+                <div class="hamburgerOpt" @click="page='main'; hamburger_selected=false">VEM</div>
+                <div class="hamburgerOpt" @click="page='data'; hamburger_selected=false">Utilizing Data</div>
+            </div>
+        </div>
+        <div v-if="page=='main'">
+            <div class="wrapper">
+                <div class="contentWrapper">
+                    <div class="lineWrapper" @click="nameClicked" :class="{lineFocus:name_selected, errorBorder:nameError}">
+                        <img class="lineIcon" src="icons/name_button.svg">
+                        <input v-model="currentName" class="lineInput" :class="{backGray:name_selected}">
+                        <div class="line" v-else>{{currentName}}</div>
+                    </div>
+                    <div v-if="nameError">
+                        <ul class="ul2">
+                            <li v-if="nameError" class="errorMessages"><img class="errorImg" src="icons/alert.svg">Name required.</li>
+                        </ul>
+                    </div>
+
+                    <div class="lineWrapper" @click="trailClicked(), outside" :class="{lineFocus:trail_selected}">
+                        <img class="lineIcon" src="icons/trail_button.svg">
+                        <div class="line">{{currentTrail}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wrapper" @click="outside">
+                <div class="contentWrapper">
+                    <div style="display: block;">
+                        <div class="countContainer left" @click="footUp+=1">
+                            <h1>Number of Encounters</h1>
+                            <h2>{{footUp}}</h2>
+                            <img class="countBtn" src="icons/up_direction.svg">
+                        </div>
+                        <div class="countContainer right" @click="footDown+=1">
+                            <h1>Number of Encounters</h1>
+                            <h2>{{footDown}}</h2>
+                            <img class="countBtn" src="icons/down_direction.svg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wrapper2" @click="outside">
+                <div class="contentWrapper">
+                    <div class="lineWrapper" id="weather" ref="weather" @click="weatherClicked">
+                        <img class="lineIcon" src="icons/weather_button.svg">
+                        <div class="line">{{currentWeather}}</div>
+                    </div>
+
+                    <div class="lineWrapper" @click="notes_selected=true">
+                        <img class="lineIcon" src="icons/notes_button.svg">
+                        <div class="line">{{currentNotes}}</div>
+                    </div>
+
+                    <div class="lineWrapper" @click="visitation_selected=true">
+                        <img class="lineIcon" src="icons/visitation_button.svg">
+                        <div class="line">{{currentVisitation}}</div>
+                    </div>
+
+                    <div class="lineWrapper" @click="status_selected=true">
+                        <img class="lineIcon" src="icons/trail_status_button.svg">
+                        <div class="line">{{currentStatus}}</div>
+                    </div>
+
+                    <div class="lineWrapper" @click="condition_selected=true">
+                        <img class="lineIcon" src="icons/trail_conditions_button.svg">
+                        <div class="line">{{currentCondition}}</div>
+                    </div>
+
+                    <input class="hide_file" type="file" ref="file" name="image" accept="image/*" capture="environment" style="display:none;border:none;">
+                    <button id="addPicture" @click="$refs.file.click()">TAKE PICTURE<img id="camera" src="icons/cameraZion.svg"></button>
+                    <p id="centerP">Please insert the taken photo(s) into the email.</p>
+
+                    <div v-if="nameError || dateError">
+                        <ul>
+                            <li v-if="nameError" class="errorMessages"><img class="errorImg" src="icons/alert.svg">Name required.</li>
+                            <li v-if="dateError" class="errorMessages">Date required.</li>
+                        </ul>
+                    </div>
+
+                    <button id="send" @click="sendClicked">SEND</button>
+                </div>
+                <div v-if="showInstallMessage" id="installContainer">
+                    <div style="float: left;">
+                        <img src="icons/plus.png" style="height: 25px; width: 25px; margin: 15px; margin-right: 5px; filter: invert(100%)">
+                    </div>
+                    <div style="display: inline-block; width: 80%">
+                        <p style="margin: 10px;">Install this webapp on your device: tap &nbsp;<img src="icons/saveBtn.png" style="height: 20px; width: 16px; vertical-align: middle;">&nbsp; then Add to homescreen.</p>
+                    </div>
+                    <div class="arrow-down"></div>
+                </div>
+                <div v-if="showAndroidInstallMessage" id="androidInstallContainer">
+                    <div style="float: left;">
+                        <img src="icons/plus.png" style="height: 25px; width: 25px; margin: 15px; margin-right: 5px; filter: invert(100%)">
+                    </div>
+                    <div style="display: inline-block; width: 80%">
+                        <p style="margin: 10px;">Install this webapp on your device: tap &nbsp;<img src="icons/hamburgerBtn.png" style="height: 14px; width: auto; vertical-align: middle; filter: invert(100%);">&nbsp; then Add to homescreen.</p>
+                    </div>
+                    <div class="arrow-up"></div>
+                </div>
+            </div>
+
+            <div class="overlay" v-if="notes_selected">
+                <div class="optionWrap2 notesWrap">
+                    <h4 class="overlayTitle">Notes</h4>
+                    <textarea type="text" class="notes" maxlength="300" v-model="currentNotes">{{currentNotes}}</textarea>
+                    <button class="notesBtn clear" @click="currentNotes=''">Clear</button>
+                    <button class="notesBtn done" @click="doneClicked">Done</button>
+                </div>
+            </div>
+
+            <div class="overlay" v-if="visitation_selected">
+                <div class="optionWrap2">
+                    <h4 class="overlayTitle">Visitation</h4>
+                    <div v-for="visit in visitations" @click="currentVisitation=visit; visitation_selected=false">{{visit}}</div>
+                </div>
+            </div>
+
+            <div class="overlay" v-if="status_selected">
+                <div class="optionWrap2">
+                    <h4 class="overlayTitle">Trail Status</h4>
+                    <div v-for="status in statuses" @click="currentStatus=status; status_selected=false">{{status}}</div>
+                </div>
+            </div>
+
+            <div class="overlay" v-if="condition_selected">
+                <div class="optionWrap2 optionWrap3">
+                    <h4 class="overlayTitle">Trail Condition</h4>
+                    <div v-for="condition in conditions" @click="currentCondition=condition; condition_selected=false">{{condition}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper" v-if="page=='trailSelect'">
+            <div class="appBar"> <!-- App bar for trail select page -->
+                <div class="title selectTitle"><img class="x" src="icons/x.svg" @click="page='main'">Select Trail or Segment</div>
+            </div>
+            <div class="optionWrap" v-model="currentTrail">
+                <div class="pick" v-for="trail in trails" @click="currentTrail=trail; page='main'">{{trail}}</div>
+            </div>
+            <button class="cancel" @click="page='main'">Cancel</button>
+        </div>
+
+        <div class="wrapper" v-if="page=='weatherSelect'">
+            <div class="appBar"> <!-- App bar for weather select page -->
+                <div class="title selectTitle"><img class="x" src="icons/x.svg" @click="page='main'">Select Weather Condition</div>
+            </div>
+            <div class="optionWrap" v-model="currentWeather">
+                <div v-for="weather in weatherConditions" @click="currentWeather=weather; page='main'">{{weather}}</div>
+            </div>
+            <button class="cancel" @click="page='main'">Cancel</button>
+        </div>
+
+        <div v-if="page=='data'">
+            <div class="wrapper3">
+                <h1 class="dataTitle">Utilizing Data</h1>
+                <h5 class="dataHeaders">Copy email:</h5>
+                <img class="dataPic" src="icons/copyEmail.png">
+                <h5 class="dataHeaders">Paste into cell:</h5>
+                <img class="dataPic" src="icons/paste.png">
+                <h5 class="dataHeaders">Click on clipboard and select Split text to columns:</h5>
+                <img class="dataPic" src="icons/split.png">
+                <h5 class="dataHeaders">Click on Separator and select Semicolon:</h5>
+                <img class="dataPic" src="icons/semicolon.png">
+                <h5 class="dataHeaders">Final outcome:</h5>
+                <img class="dataPic" src="icons/start2.png">
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="app.js"></script>
+</body>
+</html>
