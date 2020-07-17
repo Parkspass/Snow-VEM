@@ -1,6 +1,6 @@
 {
-    "name": "Zion VEM",
-    "short_name": "ZionVEM",
+    "name": "Snow Canyon VEM",
+    "short_name": "SnowCanyonVEM",
     "start_url": ".",
     "display": "standalone",
     "orientation": "portrait-primary",

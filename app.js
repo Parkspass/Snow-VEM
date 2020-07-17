@@ -128,16 +128,30 @@ var app = new Vue({
         },
         nameClicked: function(){
             this.name_selected = true;
+            this.date_selected = false;
             if (this.currentName == "Add Staff/Vip Name(s)"){
                 this.currentName = "";
             }
         },
+        dateClicked: function(){
+            this.name_selected = false;
+            this.date_selected = true;
+            if(this.currentDate == "Date"){
+                this.currentDate = "";
+            }
+        },
         outside: function(){
             this.name_selected = false;
+            this.date_selected = false;
             this.nameError = false;
+            this.dateError = false;
             if(this.currentName == "" || this.currentName == "Add Staff/Vip Name(s)"){
                 this.currentName = "Add Staff/Vip Name(s)";
                 this.nameError = true;
+            }
+            if(this.currentDate == "" || this.currentDate == "Date"){
+                this.currentDate = "Date";
+                this.dateError = true;
             }
         },
         trailClicked: function(){
@@ -192,7 +206,7 @@ var app = new Vue({
                 if (!this.currentName || this.currentName == "Add Staff/Vip Name(s)") {
                     this.nameError = true;
                 }
-                if (!this.currentDate) {
+                if (!this.currentDate || this.currentDate == "Date") {
                     this.dateError = true;
                 }
             }
