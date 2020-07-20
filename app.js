@@ -28,39 +28,34 @@ var app = new Vue({
             "Scout Cave Trail",
             "Whiterocks Amphitheater",
         ],
-        weatherConditions: ['Sunny', 'Mostly Sunny', 'Cloudy', 'Thunder Storms', 'Rain Showers', 'Rain', 'Sleet', 'Snow', 'Haze', 'Smokey'],
-        visitations: ['Not busy', 'Not too busy', 'Little busy', 'Busy as it gets'],
         statuses: ['Clear', 'Minor Issue', 'Significant Issue', 'Closed or Major Issue'],
-        conditions: ['Dry/Normal Summer Conditions', 'Mostly Dry (some water)', 'Wet and Slippery', 'Snow', 'Some Snow', 'Snow and Ice'],
 
         currentName: 'Add Staff/Vip Name(s)',
         currentDate: '',
         currentTrail: 'Select Trail or Segment Name',
         currentWeather: 'Select Weather',
-        currentNotes: 'Add Notes',
-        currentVisitation: 'Select Visitation',
         currentStatus: 'Select Trail Status',
-        currentCondition: 'Select Trail Conditions',
+        currentNotes: 'General Observations',
         
         hamburger_selected: false,
         name_selected: false,
         date_selected: false,
         trail_selected: false,
-        weather_selected: false,
-        notes_selected: false,
-        visitation_selected: false,
+        foot_selected: true,
+        dog_selected: false,
         status_selected: false,
-        condition_selected: false,
+        notes_selected: false,
 
-        footUp: 0,
-        footDown: 0,
+        foot: 0,
+        dog: 0,
+        footRotation: 180,
+        dogRotation: 0,
 
         startTime: '',
         endTime: '',
         latitude: '',
         longitude: '',
         nameError: false,
-        dateError: false,
     },
     created: function(){
         this.loadDate();
@@ -128,38 +123,43 @@ var app = new Vue({
         },
         nameClicked: function(){
             this.name_selected = true;
-            this.date_selected = false;
             if (this.currentName == "Add Staff/Vip Name(s)"){
                 this.currentName = "";
             }
         },
-        dateClicked: function(){
-            this.name_selected = false;
-            this.date_selected = true;
-            if(this.currentDate == "Date"){
-                this.currentDate = "";
-            }
-        },
         outside: function(){
             this.name_selected = false;
-            this.date_selected = false;
             this.nameError = false;
-            this.dateError = false;
             if(this.currentName == "" || this.currentName == "Add Staff/Vip Name(s)"){
                 this.currentName = "Add Staff/Vip Name(s)";
                 this.nameError = true;
-            }
-            if(this.currentDate == "" || this.currentDate == "Date"){
-                this.currentDate = "Date";
-                this.dateError = true;
             }
         },
         trailClicked: function(){
             this.page = "trailSelect";
             this.name_selected = false;
         },
-        weatherClicked: function(){
-            this.page = "weatherSelect";
+        footClicked: function(){
+            if (this.foot_selected == true){
+                this.foot_selected = false;
+                this.footRotation = 0;
+            }else{
+                this.foot_selected = true;
+                this.footRotation = 180;
+            }
+        },
+        dogClicked: function(){
+            if (this.dog_selected == true){
+                this.dog_selected = false;
+                this.dogRotation = 0;
+            }else{
+                this.dog_selected = true;
+                this.dogRotation = 180;
+            }
+        },
+        notesClicked: function(){
+            this.notes_selected = true;
+            this.currentNotes = "";
         },
         scroll: function(index){
             document.getElementById(index).scrollIntoView();
@@ -175,7 +175,7 @@ var app = new Vue({
         doneClicked: function(){
             this.notes_selected = false;
             if(this.currentNotes == ""){
-                this.currentNotes = "Add Notes";
+                this.currentNotes = "General Observations";
             }
         },
         sendClicked: function(){
@@ -194,20 +194,14 @@ var app = new Vue({
                     this.currentTrailSending + ";" +
                     this.latitude + ";" +
                     this.longitude + ";" +
-                    this.footUp + ";" + 
-                    this.footDown + ";" +
-                    this.currentWeatherSending + ";" + 
-                    this.currentVisitationSending + ";" +
+                    this.foot + ";" + 
+                    this.dog + ";" +
                     this.currentStatusSending + ";" + 
-                    this.currentConditionSending + ";" +
                     this.currentNotesSending + ";"
                 ;
             }else {
                 if (!this.currentName || this.currentName == "Add Staff/Vip Name(s)") {
                     this.nameError = true;
-                }
-                if (!this.currentDate || this.currentDate == "Date") {
-                    this.dateError = true;
                 }
             }
         },
@@ -218,34 +212,16 @@ var app = new Vue({
                 this.currentTrailSending = this.currentTrail;
             }
 
-            if(this.currentWeather == "Select Weather"){
-                this.currentWeatherSending = null;
-            }else{
-                this.currentWeatherSending = this.currentWeather;
-            }
-
-            if(this.currentNotes == "Add Notes"){
+            if(this.currentNotes == "General Observations"){
                 this.currentNotesSending = null;
             }else{
                 this.currentNotesSending = this.currentNotes;
-            }
-
-            if(this.currentVisitation == "Select Visitation"){
-                this.currentVisitationSending = null;
-            }else{
-                this.currentVisitationSending = this.currentVisitation;
             }
 
             if(this.currentStatus == "Select Trail Status"){
                 this.currentStatusSending = null;
             }else{
                 this.currentStatusSending = this.currentStatus;
-            }
-
-            if(this.currentCondition == "Select Trail Conditions"){
-                this.currentConditionSending = null;
-            }else{
-                this.currentConditionSending = this.currentCondition;
             }
         },
     },
