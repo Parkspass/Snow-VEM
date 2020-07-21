@@ -36,6 +36,7 @@ var app = new Vue({
         currentWeather: 'Select Weather',
         currentStatus: 'Select Trail Status',
         currentNotes: 'General Observations',
+        currentTrailsign: 'Trail/Sign Issues',
         
         hamburger_selected: false,
         name_selected: false,
@@ -45,6 +46,7 @@ var app = new Vue({
         dog_selected: false,
         status_selected: false,
         notes_selected: false,
+        trailsign_selected: false,
 
         foot: 0,
         dog: 0,
@@ -56,6 +58,7 @@ var app = new Vue({
         latitude: '',
         longitude: '',
         nameError: false,
+        dateError: false,
     },
     created: function(){
         this.loadDate();
@@ -120,24 +123,48 @@ var app = new Vue({
             var fulldate = days[date.getDay()] + ", " + months[date.getMonth()] + " " + date.getDate() + " " + date.getFullYear();
             this.currentDate = fulldate;
             this.startTime = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            return fulldate;
         },
         nameClicked: function(){
             this.name_selected = true;
+            this.date_selected = false;
             if (this.currentName == "Add Staff/Vip Name(s)"){
                 this.currentName = "";
             }
+            if(this.currentDate == ""){
+                this.currentDate = this.loadDate();
+            }
         },
-        outside: function(){
-            this.name_selected = false;
+        nameCheck: function(){
             this.nameError = false;
             if(this.currentName == "" || this.currentName == "Add Staff/Vip Name(s)"){
                 this.currentName = "Add Staff/Vip Name(s)";
                 this.nameError = true;
             }
         },
+        dateClicked: function (){
+            this.date_selected = true;
+            this.name_selected = false;
+            this.nameCheck();
+        },
+        outside: function(){
+            this.name_selected = false;
+            this.date_selected = false;
+            this.nameError = false;
+            this.dateError = false;
+            this.nameCheck();
+            if(this.currentDate == ""){
+                this.currentDate = this.loadDate();
+            }
+        },
         trailClicked: function(){
+            this.nameCheck();
             this.page = "trailSelect";
             this.name_selected = false;
+            this.date_selected = false;
+            if(this.currentDate == ""){
+                this.currentDate = this.loadDate();
+            }
         },
         footClicked: function(){
             if (this.foot_selected == true){
@@ -161,6 +188,10 @@ var app = new Vue({
             this.notes_selected = true;
             this.currentNotes = "";
         },
+        trailsignClicked: function(){
+            this.trailsign_selected = true;
+            this.currentTrailsign = "";
+        },
         scroll: function(index){
             document.getElementById(index).scrollIntoView();
         },
@@ -176,6 +207,10 @@ var app = new Vue({
             this.notes_selected = false;
             if(this.currentNotes == ""){
                 this.currentNotes = "General Observations";
+            }
+            this.trailsign_selected = false;
+            if(this.currentTrailsign == ""){
+                this.currentTrailsign = "Trail/Sign Issues";
             }
         },
         sendClicked: function(){
@@ -197,7 +232,8 @@ var app = new Vue({
                     this.foot + ";" + 
                     this.dog + ";" +
                     this.currentStatusSending + ";" + 
-                    this.currentNotesSending + ";"
+                    this.currentNotesSending + ";" +
+                    this.currentTrailsignSending + ";"
                 ;
             }else {
                 if (!this.currentName || this.currentName == "Add Staff/Vip Name(s)") {
@@ -216,6 +252,12 @@ var app = new Vue({
                 this.currentNotesSending = null;
             }else{
                 this.currentNotesSending = this.currentNotes;
+            }
+
+            if(this.currentTrailsign == "Trail/Sign Issues"){
+                this.currentTrailsignSending = null;
+            }else{
+                this.currentTrailsignSending = this.currentTrailsign;
             }
 
             if(this.currentStatus == "Select Trail Status"){

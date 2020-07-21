@@ -58,16 +58,16 @@
                         </ul>
                     </div>
 
-                    <!--<div class="lineWrapper" @click="dateClicked" :class="{lineFocus:date_selected, errorBorder:dateError}">
+                    <div class="lineWrapper" @click="dateClicked" :class="{lineFocus:date_selected, errorBorder:dateError}">
                         <img class="lineIcon" src="icons/date_button.svg">
-                        <input v-model="currentDate" class="lineInput" :class="{backGray:date_selected}">
+                        <input v-model="currentDate" class="lineInput" :class="{backGray:date_selected}" @click="dateClicked">
                         <div class="line" v-else>{{currentDate}}</div>
                     </div>
                     <div v-if="dateError">
                         <ul class="ul2">
                             <li v-if="dateError" class="errorMessages"><img class="errorImg" src="icons/alert.svg">Date required.</li>
                         </ul>
-                    </div>-->
+                    </div>
 
                     <div class="lineWrapper" @click="trailClicked(), outside" :class="{lineFocus:trail_selected}">
                         <img class="lineIcon" src="icons/trail_button.svg">
@@ -80,11 +80,11 @@
                 <div class="contentWrapper">
                     <div class="lineWrapper" @click="footClicked()">
                         <img class="lineIcon" src="icons/walking.svg">
-                        <div class="line">On Foot</div>
+                        <div class="line">Visitors</div>
                         <img class="arrow" src="icons/arrow.svg" :style="`transform: rotate(${footRotation}deg);`">
                     </div>
                     <div v-if="foot_selected" class="countContainer left">
-                        <h1>Visitors</h1>
+                        <h1>Number of Encounters</h1>
                         <input v-model.number="foot" class="countInput" type="number"></input>
                         <img class="countBtn" src="icons/plus.svg" @click="foot+=1">
                     </div>
@@ -113,6 +113,11 @@
                     <div class="lineWrapper" @click="notesClicked()">
                         <img class="lineIcon" src="icons/notes_button.svg">
                         <div class="line">{{currentNotes}}</div>
+                    </div>
+
+                    <div class="lineWrapper" @click="trailsignClicked()">
+                        <img class="lineIcon" src="icons/trail_conditions_button.svg">
+                        <div class="line">{{currentTrailsign}}</div>
                     </div>
 
                     <input class="hide_file" type="file" ref="file" name="image" accept="image/*" capture="environment" style="display:none;border:none;">
@@ -159,6 +164,15 @@
                     <h4 class="overlayTitle">General Observations</h4>
                     <textarea type="text" class="notes" maxlength="500" v-model="currentNotes">{{currentNotes}}</textarea>
                     <button class="notesBtn clear" @click="currentNotes=''">Clear</button>
+                    <button class="notesBtn done" @click="doneClicked">Done</button>
+                </div>
+            </div>
+
+            <div class="overlay" v-if="trailsign_selected">
+                <div class="optionWrap2 notesWrap">
+                    <h4 class="overlayTitle">Trail/Sign Issues</h4>
+                    <textarea type="text" class="notes" maxlength="500" v-model="currentTrailsign">{{currentTrailsign}}</textarea>
+                    <button class="notesBtn clear" @click="currentTrailsign=''">Clear</button>
                     <button class="notesBtn done" @click="doneClicked">Done</button>
                 </div>
             </div>
