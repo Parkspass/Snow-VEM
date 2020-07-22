@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-const staticCacheName = 'site-static-v2'; // Need to change version number ANYTIME we change HTML or CSS files. This is how we get the app to update. The browser needs to detect a change in the service worker.
+const staticCacheName = 'site-static-v1'; // Need to change version number ANYTIME we change HTML or CSS files. This is how we get the app to update. The browser needs to detect a change in the service worker.
 const assets = [
     '/', // caches all reqeust responses from server
     '/index.html',
@@ -16,6 +16,13 @@ const assets = [
     '/icons/bisonGreen.jpg',
     '/icons/camera.svg',
     '/icons/plus.svg',
+    '/icons/date_button.svg',
+    '/icons/name_button.svg',
+    '/icons/notes_button.svg',
+    '/icons/trail_button.svg',
+    '/icons/trail_conditions_button.svg',
+    '/icons/trail_status_button.svg',
+    '/icons/walking.svg',
     '/icons/pwa_icons/640x1136.png',
     '/icons/pwa_icons/750x1294.png',
     '/icons/pwa_icons/1242x2148.png',
